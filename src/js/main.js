@@ -1,5 +1,4 @@
-// api.js - funciones relacionadas con la API
-export async function fetchCryptoData() {
+async function fetchCryptoData() {
     try {
         const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
         
@@ -27,7 +26,6 @@ function displayCryptoData(data) {
     });
 }
 
-// ui.js - visibilidad y el contenido de las secciones
 function hideAllSections() {
     const sections = document.querySelectorAll('main > section');
     sections.forEach(section => section.style.display = 'none');
@@ -52,7 +50,6 @@ function setupNavigation() {
     });
 }
 
-// main.js
 document.addEventListener('DOMContentLoaded', async () => {
     setupNavigation();
 
