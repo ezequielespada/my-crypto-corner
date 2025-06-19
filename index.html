@@ -11,10 +11,44 @@
     <header>
         <h1>My Crypto Corner</h1>
         <div class="header-left">
-            <button class="login">Login</button>
+            <button class="login" id="loginButton">Login</button>
+            <button class="register" id="registerButton">Register</button>
             <button class="alerts">Price Alerts</button>  
         </div>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Login</h3>
+                <form id="loginForm">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p id="loginMessage"></p>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Register</h3>
+                <form id="registerForm">
+                    <label for="newUsername">Username:</label>
+                    <input type="text" id="newUsername" name="newUsername" required>
+                    <label for="newPassword">Password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                    <button type="submit">Register</button>
+                </form>
+                <p id="registerMessage"></p>
+            </div>
+        </div>
     </header>
+
     <nav class="nav-bar">
         <ul>
             <li><a href="#top-currencies">Top Currencies</a></li>
@@ -30,7 +64,7 @@
             <button id="search-button">Search</button>
         </section>
 
-        <!-- Modal -->
+        <!-- Crypto Details Modal -->
         <div id="cryptoModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>

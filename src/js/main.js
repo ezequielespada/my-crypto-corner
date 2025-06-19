@@ -43,7 +43,6 @@ function displayCryptoData(data) {
     contentList.innerHTML = '';
     contentList.appendChild(table);
 
-    // Event listeners para el nombre de la criptomoneda
     document.querySelectorAll('.crypto-name').forEach(cell => {
         cell.addEventListener('click', (event) => {
             const cryptoId = event.currentTarget.getAttribute('data-id');
@@ -53,7 +52,6 @@ function displayCryptoData(data) {
         });
     });
 
-    // Event listeners para las noticias
     document.querySelectorAll('.latest-news').forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
@@ -79,6 +77,7 @@ async function fetchTrendingData() {
         return null;
     }
 }
+
 function displayTrendingData(data) {
     const contentList = document.querySelector('#trending .content-list');
     const table = document.createElement('table');
@@ -107,16 +106,14 @@ function displayTrendingData(data) {
     contentList.innerHTML = '';
     contentList.appendChild(table);
 
-    // Añadir eventos de clic para las criptomonedas trending
     document.querySelectorAll('.trending-crypto-name').forEach(cell => {
         cell.addEventListener('click', (event) => {
             const cryptoId = event.currentTarget.getAttribute('data-id');
-            const cryptoName = event.currentTarget.innerText.split(' ')[0]; // Obtener el nombre
+            const cryptoName = event.currentTarget.innerText.split(' ')[0];
             showCryptoDetails(cryptoId, cryptoName);
         });
     });
 
-    // Eventos para las noticias
     document.querySelectorAll('.latest-news').forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
@@ -125,6 +122,7 @@ function displayTrendingData(data) {
         });
     });
 }
+
 function hideAllSections() {
     const sections = document.querySelectorAll('main > section');
     sections.forEach(section => {
@@ -155,13 +153,11 @@ function setupNavigation() {
 
 function setupSearch(topCurrenciesData, trendingData) {
     const searchInput = document.getElementById('crypto-search');
-
-    // Combina los datos
     const combinedData = topCurrenciesData.concat(trendingData.map(item => ({
         id: item.item.id,
         name: item.item.name,
-        current_price: item.item.price_btc, // Calcula el precio en USD si es necesario
-        price_change_percentage_24h_in_currency: 0 // Asigna 0 o calcula si es posible
+        current_price: item.item.price_btc,
+        price_change_percentage_24h_in_currency: 0
     })));
 
     searchInput.addEventListener('input', (event) => {
@@ -173,7 +169,6 @@ function setupSearch(topCurrenciesData, trendingData) {
     });
 }
 
-// Mostrar los detalles de la criptomoneda
 async function showCryptoDetails(cryptoId, cryptoName) {
     const modal = document.getElementById('cryptoModal');
     const modalTitle = document.getElementById('modalTitle');
@@ -184,8 +179,6 @@ async function showCryptoDetails(cryptoId, cryptoName) {
     try {
         const response = await fetch(`https://api.coingecko.com/api/v3/coins/${cryptoId}`);
         const data = await response.json();
-
-        console.log(data);
 
         const { market_data } = data;
         const { usd } = market_data.current_price || {};
@@ -210,7 +203,6 @@ async function showCryptoDetails(cryptoId, cryptoName) {
     modal.style.display = 'block';
 }
 
-// Mostrar las últimas noticias
 async function showLatestNews(cryptoName) {
     const modal = document.getElementById('cryptoModal');
     const modalTitle = document.getElementById('modalTitle');
@@ -238,6 +230,102 @@ async function showLatestNews(cryptoName) {
     modal.style.display = 'block';
 }
 
+function setupLogin() {
+    const loginModal = document.getElementById('loginModal');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const loginButton = document.querySelector('.login');
+
+    function checkLoginStatus() {
+        if (localStorage.getItem('loggedIn') === 'true') {
+            loginButton.textContent = 'Logout';
+            loginModal.style.display = 'none';
+        } else {
+            loginButton.textContent = 'Login';
+        }
+    }
+
+    checkLoginStatus();
+
+    loginButton.onclick = () => {
+        if (localStorage.getItem('loggedIn') === 'true') {
+            localStorage.removeItem('loggedIn');
+            checkLoginStatus();
+        } else {
+            loginModal.style.display = 'block';
+        }
+    };
+
+    document.querySelector('#loginModal .close').onclick = function() {
+        loginModal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    };
+
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(user => user.username === username && user.password === password);
+
+        if (user) {
+            localStorage.setItem('loggedIn', 'true');
+            loginMessage.textContent = 'Login successful!';
+            loginModal.style.display = 'none';
+            checkLoginStatus();
+        } else {
+            loginMessage.textContent = 'Invalid username or password.';
+        }
+    });
+}
+
+function setupRegister() {
+    const registerModal = document.getElementById('registerModal');
+    const registerForm = document.getElementById('registerForm');
+    const registerMessage = document.getElementById('registerMessage');
+    const registerButton = document.querySelector('.register');
+
+    registerButton.onclick = () => {
+        registerModal.style.display = 'block';
+    };
+
+    document.querySelector('#registerModal .close').onclick = function() {
+        registerModal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === registerModal) {
+            registerModal.style.display = 'none';
+        }
+    };
+
+    registerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const newUsername = document.getElementById('newUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        // Guardar usuario en localStorage
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.find(user => user.username === newUsername)) {
+            registerMessage.textContent = 'Username already exists.';
+            return;
+        }
+
+        users.push({ username: newUsername, password: newPassword });
+        localStorage.setItem('users', JSON.stringify(users));
+        registerMessage.textContent = 'Registration successful!';
+        registerModal.style.display = 'none';
+    });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     setupNavigation();
 
@@ -252,16 +340,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         displayTrendingData(trendingData);
         setupSearch(cryptoData, trendingData);
     }
+
+    setupLogin();
+    setupRegister();
 });
 
-// Cerrar el modal
-document.querySelector('.close').onclick = function() {
-    document.getElementById('cryptoModal').style.display = 'none';
-}
+// Cerrar cualquier modal al hacer clic en el botón de cerrar
+document.querySelectorAll('.close').forEach(button => {
+    button.onclick = function() {
+        button.parentElement.parentElement.style.display = 'none';
+    };
+});
 
 window.onclick = function(event) {
-    const modal = document.getElementById('cryptoModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
+    // Condición para cerrar el modal al hacer clic fuera
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
 }
