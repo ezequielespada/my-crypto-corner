@@ -1,0 +1,25 @@
+{
+  "name": "my-crypto-corner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezequielespada/my-crypto-corner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ezequielespada/my-crypto-corner/issues"
+  },
+  "homepage": "https://github.com/ezequielespada/my-crypto-corner#readme",
+  "description": "",
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
